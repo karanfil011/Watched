@@ -14,9 +14,6 @@ class AddMovieController: UIViewController, DataTransferProtocol, UIImagePickerC
         titleTextField.text = name
     }
     
-    
-    
-    
     let titleLabel: UILabel = {
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false

@@ -47,7 +47,7 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(handleAdd))
-        navigationItem.title = "My movies"
+        navigationItem.title = "My library"
         navigationItem.rightBarButtonItem?.tintColor = .white
         
         setupView()
@@ -203,7 +203,10 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         print("Everything is working")
         
+        let viewController = SeeAllController()
+        let navController = UINavigationController(rootViewController: viewController)
         
+        present(navController, animated: true, completion: nil)
     }
     @objc private func handleSeeAllShows() {
         
