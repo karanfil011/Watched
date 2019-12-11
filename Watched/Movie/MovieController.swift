@@ -3,13 +3,15 @@
 
 import UIKit
 
-class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSource, PresentToAnotherView {
-    func presentToViewController() {
-        let viewcontroller = DetailMovieController()
-        let navController = UINavigationController(rootViewController: viewcontroller)
-        present(navController, animated: true, completion: nil)
+
+class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSource, AddToListDelegate {
+    
+    func didAddToList(watched: Watched, listName: String) {
+        watcheds.append(watched)
+        mainTableView.reloadData()
     }
     
+    var watcheds = [Watched]()
     
     let mainTableView: UITableView = {
         let maintv = UITableView()
@@ -35,8 +37,14 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
     let cle = "cle"
     let showCellId = "showCellId"
     let moviesCellId = "moviesCellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.watcheds = CoreDataManager.shared.fetchWatched()
+        mainTableView.reloadData()
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+
         
         mainTableView.register(MoviesTableCell.self, forCellReuseIdentifier: moviesCellId)
         mainTableView.register(CollectionsTableCell.self, forCellReuseIdentifier: cellId)
@@ -59,7 +67,7 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         let addMovieController = AddMovieController()        
         let navController = UINavigationController(rootViewController: addMovieController)
-
+        addMovieController.addDelegate = self
         present(navController, animated: true, completion: nil)
     }
     
@@ -93,8 +101,6 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: moviesCellId, for: indexPath) as! MoviesTableCell
             
-            cell.delegate = self
-            
             return cell
         }
         
@@ -118,7 +124,6 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         cell.textLabel?.textColor = .white
         
         return cell
-        
         
     }
     
@@ -199,6 +204,18 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         return nil
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            if let cell = cell as? MoviesTableCell {
+                cell.moviesCollectionView.dataSource = self
+                cell.moviesCollectionView.delegate = self
+                cell.moviesCollectionView.reloadData()
+                
+//                CoreDataManager.shared.fetchWatched()
+            }
+        }
+    }
+    
     @objc private func handleSeeAllMovies() {
         
         print("Everything is working")
@@ -226,4 +243,36 @@ class MovieController: UIViewController, UITableViewDelegate, UITableViewDataSou
         mainTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
     }
+}
+
+extension MovieController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return watcheds.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: moviesCellId, for: indexPath) as! MovieCell
+        
+        cell.imageView.image = UIImage(named: "shazam")
+                
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 90, height: 130)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath)
+    
+        if cell!.isSelected {
+            let viewcontroller = DetailMovieController()
+            navigationController?.pushViewController(viewcontroller, animated: true)
+        }
+        
+        
+        
+    }
+    
 }

@@ -13,7 +13,13 @@ protocol PresentToAnotherView {
     func presentToViewController()
 }
 
-class MoviesTableCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+protocol AddWatchedToSelectedListDelegate {
+    func didAddSelectedList(indx: IndexPath)
+}
+
+class MoviesTableCell: UITableViewCell{
+    
+
     
     let moviesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -23,7 +29,7 @@ class MoviesTableCell: UITableViewCell, UICollectionViewDelegate, UICollectionVi
         return showscv
     }()
     
-    let cellId = "cellId"
+    let moviesCellId = "moviesCellId"
     
     var delegate: PresentToAnotherView?
     
@@ -31,8 +37,8 @@ class MoviesTableCell: UITableViewCell, UICollectionViewDelegate, UICollectionVi
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setuoView()
         
-        moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-        
+        moviesCollectionView.register(MovieCell.self, forCellWithReuseIdentifier: moviesCellId)
+//        moviesCollectionView.reloadData()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -41,34 +47,36 @@ class MoviesTableCell: UITableViewCell, UICollectionViewDelegate, UICollectionVi
     
     
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        
-        cell.backgroundColor = .blue
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 90, height: 130)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)
-        
-        if cell!.isSelected {
-            delegate?.presentToViewController()
-        }
-        
-        
-    }
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 6
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+//
+//        cell.backgroundColor = .blue
+//
+//        return cell
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: 90, height: 130)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let cell = collectionView.cellForItem(at: indexPath)
+//
+//        if cell!.isSelected {
+//            delegate?.presentToViewController()
+//        }
+//
+//
+//    }
     
     private func setuoView() {
-        moviesCollectionView.delegate = self
-        moviesCollectionView.dataSource = self
+//        moviesCollectionView.delegate = self
+//        moviesCollectionView.dataSource = self
+        
         
         addSubview(moviesCollectionView)
         moviesCollectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true

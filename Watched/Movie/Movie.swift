@@ -8,11 +8,11 @@
 
 import Foundation
 import UIKit
-
-struct Movie {
-    var title: String?
-    var list: String?
-    var image: UIImage?
-    var date: Date?
-    var text: String?
-}
+//
+//struct Movie {
+//    var title: String?
+//    var list: String?
+//    var image: UIImage?
+//    var date: Date?
+//    var text: String?
+//}

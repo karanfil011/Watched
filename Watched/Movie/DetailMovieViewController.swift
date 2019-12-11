@@ -99,11 +99,6 @@ class DetailMovieController: UIViewController {
         view.backgroundColor = .black
         navigationItem.title = movieTitle.text
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
-    }
-    
-    @objc private func handleCancel() {
-        dismiss(animated: true, completion: nil)
     }
     
     private func setupViews() {

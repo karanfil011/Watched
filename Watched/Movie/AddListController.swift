@@ -18,14 +18,14 @@ class AddListController: UITableViewController {
     let cellId = "cellId"
     
     var list = [
-        "Comedy",
-        "Horror",
-        "Action",
-        "Cartoon",
-        "Drama"
+        "Top 10",
+        "Favorite horror movies",
+        "Favorite drama",
+        "Best of 2019",
+        "Favorite 80's movies"
     ]
     
-    var myMovie = Movie()
+//    var myMovie = Movie()
     
     var delegate: DataTransferProtocol?
     

@@ -29,8 +29,8 @@ class MovieCell: UICollectionViewCell {
     
     private func setupView() {
         
-        backgroundColor = .yellow
-        self.layer.cornerRadius = 5
+//        backgroundColor = .yellow
+//        self.layer.cornerRadius = 5
         
         
         addSubview(imageView)

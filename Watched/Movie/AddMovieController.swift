@@ -8,6 +8,11 @@
 
 import Foundation
 import UIKit
+import CoreData
+
+protocol AddToListDelegate {
+    func didAddToList(watched: Watched, listName: String)
+}
 
 class AddMovieController: UIViewController, DataTransferProtocol, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SendNameBack {
     func sendSelectedTitle(name: String) {
@@ -107,6 +112,8 @@ class AddMovieController: UIViewController, DataTransferProtocol, UIImagePickerC
         return title
     }()
     
+    var addDelegate: AddToListDelegate?
+    
     @objc private func handleSelectPhoto() {
         print("Trying to select photo..")
         let imagePickerController = UIImagePickerController()
@@ -182,15 +189,14 @@ class AddMovieController: UIViewController, DataTransferProtocol, UIImagePickerC
         }
         
         
+        let context = CoreDataManager.shared.persistantContainer.viewContext
+        let watched = NSEntityDescription.insertNewObject(forEntityName: "Watched", into: context)
         
-        
-        var myMovie = Movie()
-        
-        myMovie.title = title
-        myMovie.list = list
-        myMovie.date = dateFormatted
-        myMovie.text = detail
-        myMovie.image = image
+        watched.setValue(title, forKey: "name")
+        watched.setValue(list, forKey: "list")
+        watched.setValue(dateFormatted, forKey: "date")
+        watched.setValue(detail, forKey: "detail")
+        watched.setValue(image.jpegData(compressionQuality: 0.8) as NSData?, forKey: "image")
         
         if titleTextField.text == "" {
             
@@ -200,8 +206,15 @@ class AddMovieController: UIViewController, DataTransferProtocol, UIImagePickerC
             
         }
         else {
-            print(myMovie)
-            dismiss(animated: true, completion: nil)
+            do {
+                try context.save()
+                dismiss(animated: true) {
+                    self.addDelegate?.didAddToList(watched: watched as! Watched, listName: list)
+                }
+            }
+            catch {
+                print("Error saving watched", error)
+            }
         }
         
        
